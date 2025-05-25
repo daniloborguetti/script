@@ -1,0 +1,88 @@
+function onEdit(e) {
+  var sheet = e.source.getActiveSheet();
+  var range = e.range;
+  var row = range.getRow();
+
+  // Colunas
+  var colData            = 1;   
+  var colUserIndex       = 2;  
+  var colFirstname       = 3;  
+  var colLastname        = 4;  
+  var colEmail           = 5;  
+  var colPhone           = 6;  
+  var colCity            = 7;  
+  var colState           = 8;  
+  var colCountry         = 9;   
+  var colStatus          = 10;  
+  var colQualification   = 11;   
+  var colValue           = 12;   
+  var colUTMSource       = 13;   
+  var colUTMMedium       = 14;  
+  var colUTMCampaign     = 15;  
+  var colUTMContent      = 16;  
+  var colUTMTerm         = 17;  
+  var colFbclid          = 18;  
+  var colGclid           = 19;  
+  var colLeadQualificado = 20;  
+  var colLeadConvertido  = 21;  
+
+  // Só processa se a coluna editada for a "Lead convertido"
+  if (range.getColumn() !== colLeadConvertido) return;
+
+  // Captura valor da célula editada
+  var leadConvertidoValue = sheet.getRange(row, colLeadConvertido).getValue();
+
+  // Verifica se está marcado como verdadeiro (aceita várias formas)
+  var isLeadConvertido = 
+    leadConvertidoValue === true || 
+    leadConvertidoValue === "VERDADEIRO" || 
+    leadConvertidoValue === "verdadeiro" || 
+    leadConvertidoValue === "TRUE" || 
+    leadConvertidoValue === "true";
+
+  if (!isLeadConvertido) return;
+
+  // Captura todos os dados da linha
+  var dataRow = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
+
+  var payload = {
+    "event": "Lead convertido",
+    "data": dataRow[colData - 1],
+    "user_index": dataRow[colUserIndex - 1],
+    "firstname": dataRow[colFirstname - 1],
+    "lastname": dataRow[colLastname - 1],
+    "email": dataRow[colEmail - 1],
+    "phone": dataRow[colPhone - 1],
+    "city": dataRow[colCity - 1],
+    "state": dataRow[colState - 1],
+    "country": dataRow[colCountry - 1],
+    "status": dataRow[colStatus - 1],
+    "qualification": dataRow[colQualification - 1],
+    "value": dataRow[colValue - 1],
+    "currency": "BRL",
+    "utm_source": dataRow[colUTMSource - 1],
+    "utm_medium": dataRow[colUTMMedium - 1],
+    "utm_campaign": dataRow[colUTMCampaign - 1],
+    "utm_content": dataRow[colUTMContent - 1],
+    "utm_term": dataRow[colUTMTerm - 1],
+    "fbclid": dataRow[colFbclid - 1],
+    "gclid": dataRow[colGclid - 1],
+    "lead_qualificado": dataRow[colLeadQualificado - 1] === true || dataRow[colLeadQualificado - 1] === "VERDADEIRO" || dataRow[colLeadQualificado - 1] === "verdadeiro" || dataRow[colLeadQualificado - 1] === "TRUE" || dataRow[colLeadQualificado - 1] === "true",
+    "lead_convertido": isLeadConvertido
+  };
+
+  // Envio do payload via POST para o endpoint
+  var endpointUrl = 'COLOQUE O ENDPOINT AQUI';
+  var options = {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload)
+  };
+
+  try {
+    var response = UrlFetchApp.fetch(endpointUrl, options);
+    Logger.log('Resposta do endpoint: ' + response.getContentText());
+  } catch (error) {
+    Logger.log('Erro ao enviar payload: ' + error);
+  }
+}
