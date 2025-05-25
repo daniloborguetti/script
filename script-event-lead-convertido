@@ -45,30 +45,55 @@ function onEdit(e) {
   // Captura todos os dados da linha
   var dataRow = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
 
+  // Formatação da data (ISO 8601 com -0300)
+  var originalDate = new Date(dataRow[colData - 1]);
+  var pad = function(num) { return num < 10 ? '0' + num : num; };
+
+  var year = originalDate.getFullYear();
+  var month = pad(originalDate.getMonth() + 1);
+  var day = pad(originalDate.getDate());
+  var hours = pad(originalDate.getHours());
+  var minutes = pad(originalDate.getMinutes());
+  var seconds = pad(originalDate.getSeconds());
+
+  var dateFormatted = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + '-0300';
+
+  // Estrutura do Payload
   var payload = {
-    "event": "Lead convertido",
-    "data": dataRow[colData - 1],
-    "user_index": dataRow[colUserIndex - 1],
-    "firstname": dataRow[colFirstname - 1],
-    "lastname": dataRow[colLastname - 1],
-    "email": dataRow[colEmail - 1],
-    "phone": dataRow[colPhone - 1],
-    "city": dataRow[colCity - 1],
-    "state": dataRow[colState - 1],
-    "country": dataRow[colCountry - 1],
-    "status": dataRow[colStatus - 1],
-    "qualification": dataRow[colQualification - 1],
-    "value": dataRow[colValue - 1],
-    "currency": "BRL",
-    "utm_source": dataRow[colUTMSource - 1],
-    "utm_medium": dataRow[colUTMMedium - 1],
-    "utm_campaign": dataRow[colUTMCampaign - 1],
-    "utm_content": dataRow[colUTMContent - 1],
-    "utm_term": dataRow[colUTMTerm - 1],
-    "fbclid": dataRow[colFbclid - 1],
-    "gclid": dataRow[colGclid - 1],
-    "lead_qualificado": dataRow[colLeadQualificado - 1] === true || dataRow[colLeadQualificado - 1] === "VERDADEIRO" || dataRow[colLeadQualificado - 1] === "verdadeiro" || dataRow[colLeadQualificado - 1] === "TRUE" || dataRow[colLeadQualificado - 1] === "true",
-    "lead_convertido": isLeadConvertido
+    event: "Lead convertido",
+    date: dataRow[colData - 1],
+    date_formated: dateFormatted,
+    user_data: {
+      user_index: dataRow[colUserIndex - 1],
+      firstname: dataRow[colFirstname - 1],
+      lastname: dataRow[colLastname - 1],
+      email: dataRow[colEmail - 1],
+      phone: dataRow[colPhone - 1],
+      city: dataRow[colCity - 1],
+      state: dataRow[colState - 1],
+      country: dataRow[colCountry - 1]
+    },
+    order: {
+      status: dataRow[colStatus - 1],
+      qualification: dataRow[colQualification - 1],
+      value: dataRow[colValue - 1],
+      currency: "BRL"
+    },
+    tracking: {
+      utm_source: dataRow[colUTMSource - 1],
+      utm_medium: dataRow[colUTMMedium - 1],
+      utm_campaign: dataRow[colUTMCampaign - 1],
+      utm_content: dataRow[colUTMContent - 1],
+      utm_term: dataRow[colUTMTerm - 1]
+    },
+    ads_parameter: {
+      fbclid: dataRow[colFbclid - 1],
+      gclid: dataRow[colGclid - 1]
+    },
+    lead: {
+      lead_qualificado: dataRow[colLeadQualificado - 1] === true || dataRow[colLeadQualificado - 1] === "VERDADEIRO" || dataRow[colLeadQualificado - 1] === "verdadeiro" || dataRow[colLeadQualificado - 1] === "TRUE" || dataRow[colLeadQualificado - 1] === "true",
+      lead_convertido: isLeadConvertido
+    }
   };
 
   // Envio do payload via POST para o endpoint
