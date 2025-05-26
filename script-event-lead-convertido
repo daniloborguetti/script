@@ -1,5 +1,17 @@
 function onEdit(e) {
-  var sheet = e.source.getActiveSheet();
+  // ID fixo da planilha
+  var sheetId = 'ID DA PLANILHA';
+
+  // Nome da aba específica
+  var sheetName = 'NOME DA ABA DA PLANILHA';
+
+  // Abre a planilha pelo ID
+  var ss = SpreadsheetApp.openById(sheetId);
+
+  // Seleciona a aba específica
+  var sheet = ss.getSheetByName(sheetName);
+
+  // Pega a linha e a coluna editadas
   var range = e.range;
   var row = range.getRow();
 
