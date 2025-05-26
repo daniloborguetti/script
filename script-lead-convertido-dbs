@@ -27,24 +27,26 @@ function onEdit(e) {
   var colState           = 9;   
   var colCountry         = 10;    
   var colStatus          = 11;   
-  var colQualification   = 12;    
-  var colValue           = 13;    
-  var colCurrency        = 14;    
-  var colUTMSource       = 15;     
-  var colUTMMedium       = 16;    
-  var colUTMCampaign     = 17;    
-  var colUTMContent      = 18;    
-  var colUTMTerm         = 19;    
-  var colFbclid          = 20;    
-  var colFbp             = 21;   
-  var colSourceURL       = 22;   
-  var colClientIP        = 23;   
-  var colClientUserAgent = 24;   
-  var colGclid           = 25;    
-  var colWbraid          = 26;    
-  var colGbraid          = 27;    
-  var colLeadQualificado = 28;    
-  var colLeadConvertido  = 29;  
+  var colQualification   = 12; 
+  var colProductName     = 13;    
+  var colProductID       = 14;     
+  var colValue           = 15;    
+  var colCurrency        = 16;    
+  var colUTMSource       = 17;     
+  var colUTMMedium       = 18;    
+  var colUTMCampaign     = 19;    
+  var colUTMContent      = 20;    
+  var colUTMTerm         = 21;    
+  var colFbclid          = 22;    
+  var colFbp             = 23;   
+  var colSourceURL       = 24;   
+  var colClientIP        = 25;   
+  var colClientUserAgent = 26;   
+  var colGclid           = 27;    
+  var colWbraid          = 28;    
+  var colGbraid          = 29;    
+  var colLeadQualificado = 30;    
+  var colLeadConvertido  = 31;  
 
   // Só processa se a coluna editada for a "Lead convertido"
   if (range.getColumn() !== colLeadConvertido) return;
@@ -82,6 +84,8 @@ function onEdit(e) {
     order: {
       status: dataRow[colStatus - 1],
       qualification: dataRow[colQualification - 1],
+      product_name: dataRow[colProductName - 1],
+      product_id: dataRow[colProductID - 1],
       value: dataRow[colValue - 1],
       currency: dataRow[colCurrency - 1]
     },
