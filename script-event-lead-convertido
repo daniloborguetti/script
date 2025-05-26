@@ -45,24 +45,10 @@ function onEdit(e) {
   // Captura todos os dados da linha
   var dataRow = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
 
-  // Formatação da data (ISO 8601 com -0300)
-  var originalDate = new Date(dataRow[colData - 1]);
-  var pad = function(num) { return num < 10 ? '0' + num : num; };
-
-  var year = originalDate.getFullYear();
-  var month = pad(originalDate.getMonth() + 1);
-  var day = pad(originalDate.getDate());
-  var hours = pad(originalDate.getHours());
-  var minutes = pad(originalDate.getMinutes());
-  var seconds = pad(originalDate.getSeconds());
-
-  var dateFormatted = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds + '-0300';
-
   // Estrutura do Payload
   var payload = {
     event: "Lead convertido",
     date: dataRow[colData - 1],
-    date_formated: dateFormatted,
     user_data: {
       user_index: dataRow[colUserIndex - 1],
       firstname: dataRow[colFirstname - 1],
